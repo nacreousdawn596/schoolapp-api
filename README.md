@@ -1,79 +1,50 @@
-# School App Client - Refactored
+# School App API
 
-Clean, organized structure for the School App client with proper separation of concerns.
+A Python library designed to make interacting with the School App platform a lot less painful. Instead of wrestling with session cookies and manual HTML scraping, this library gives you a clean, object-oriented way to access your grades, attendance, and profile data.
 
-## 📁 Project Structure
+## Why This Exists
+Browsing the School App web interface manually for updates is slow. If you want to build a custom dashboard, a grade tracker, or a notification bot, you need a reliable way to get that data programmatically. This library takes care of:
+- **Authentication**: Solid session management with automatic CSRF token handling.
+- **Data Cleanup**: Converts messy HTML tables into structured Python objects.
+- **Smart Logic**: Handles nested modules, element-level statistics, and transcript parsing out of the box.
 
+## Quick Start
+
+### Installation
+You can install the library locally using:
+```bash
+pip install schoolapp-api
 ```
-├── http_client.py         # Base HTTP client (GET/POST requests, cookie management)
-├── auth.py                # Authentication & CSRF token handling
-├── school_app_client.py   # Main API client (combines everything)
-└── example_usage.py       # Usage example
-```
 
-## 🎯 Architecture
-
-### 1. **http_client.py** - HTTP Layer
-- Handles raw HTTP operations (GET/POST)
-- Cookie jar and session management
-- Common headers configuration
-- Error handling for network requests
-
-### 2. **auth.py** - Authentication Layer
-- Login flow management
-- CSRF token extraction and updates
-- Session state tracking
-- Decoupled from HTTP implementation
-
-### 3. **school_app_client.py** - API Layer
-- High-level API methods (`get_filieres()`, `get_modules()`)
-- Orchestrates HTTP client and auth manager
-- Business logic for School App endpoints
-
-## 🚀 Usage
+### Basic Usage
+Getting your data is as simple as this:
 
 ```python
-from school_app_client import SchoolAppClient
+from schoolapp_api import SchoolAppClient
 
-# Initialize
+# Initialize and log in
 client = SchoolAppClient()
-
-# Login
-client.login("your.email@example.com", "password")
-
-# Fetch data
-filieres = client.get_filieres()
-modules = client.get_modules(niveau="1A", filiere="API-MPT", semestre="S1")
-
-# If you encounter 403 errors, force CSRF refresh
-modules = client.get_modules(
-    niveau="1A", 
-    filiere="API-MPT", 
-    semestre="S1",
-    refresh_csrf=True
-)
+if client.login("your.email@example.com", "password"):
+    
+    # Get your basic info
+    profile = client.get_profile()
+    print(f"Hello, {profile.full_name}!")
+    
+    # Fetch your current semester grades
+    grades = client.get_current_elem_note()
+    for item in grades:
+        print(f"{item.CodeElem}: {item.Moy}")
 ```
 
-## ✨ Benefits of This Structure
+## Project Layout
+The library is organized into several specific managers, so you always know where to find what you need:
 
-- **Separation of Concerns**: Each module has a single responsibility
-- **Testability**: Easy to mock and unit test each layer
-- **Maintainability**: Changes in one layer don't affect others
-- **Extensibility**: Easy to add new endpoints or authentication methods
-- **Reusability**: HTTP client can be used for other projects
+- **`grades`**: Handle module marks, element notes, and academic year results.
+- **`attendance`**: Track your absences and see any sanctions.
+- **`profile`**: Access your personal data and administrative files.
+- **`courses`**: Browse the study plan and available modules.
 
-## 🎯 Key Features
+For the full details on every class and function, head over to the [**/docs**](./docs/README.md) folder.
 
-- **Automatic CSRF Management**: CSRF tokens are automatically refreshed from page content
-- **Session Persistence**: Cookie-based session management keeps you logged in
-- **Smart Error Handling**: Detects 403 errors and suggests CSRF refresh
-- **Optional CSRF Force Refresh**: Use `refresh_csrf=True` to force token refresh before requests
-- **Clean Separation**: HTTP, Auth, and API layers are completely decoupled
-
-## 🔧 Potential Extensions
-
-- Add logging module
-- Implement response parsers (HTML → structured data)
-- Add caching layer
-- Create async version using `aiohttp`
-- Add retry logic with exponential backoff
+## Contributions
+Found a bug or have an idea for a new feature? Feel free to open an issue or submit a pull request. Any help making this library better for everyone is appreciated!
