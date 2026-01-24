@@ -28,7 +28,7 @@ if client.login("your.email@example.com", "password"):
     
     # Get your basic info
     profile = client.get_profile()
-    print(f"Hello, {profile.full_name}!")
+    print(f"Hello, {profile['basic_info']['full_name']}!")
     
     # Fetch your current semester grades
     grades = client.get_current_elem_note()
