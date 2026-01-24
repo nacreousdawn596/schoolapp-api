@@ -1,6 +1,6 @@
 # Managers
 
-Managers handle specific domains of the School App API, such as grades, attendance, profile, and courses. They all inherit from a common `BaseManager`.
+Managers handle specific domains of the SchoolApp API, such as grades, attendance, profile, and courses. They all inherit from a common `BaseManager`.
 
 ## `BaseManager`
 

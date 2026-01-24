@@ -1,6 +1,6 @@
 # SchoolAppClient
 
-The `SchoolAppClient` is the main entry point for interacting with the School App API. It orchestrates authentication and provides access to various managers.
+The `SchoolAppClient` is the main entry point for interacting with the SchoolApp API. It orchestrates authentication and provides access to various managers.
 
 ## Class: `SchoolAppClient`
 

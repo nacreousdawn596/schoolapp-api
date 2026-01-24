@@ -1,9 +1,9 @@
-# School App API
+# SchoolApp API
 
-A Python library designed to make interacting with the School App platform a lot less painful. Instead of wrestling with session cookies and manual HTML scraping, this library gives you a clean, object-oriented way to access your grades, attendance, and profile data.
+A Python library designed to make interacting with the SchoolApp platform a lot less painful. Instead of wrestling with session cookies and manual HTML scraping, this library gives you a clean, object-oriented way to access your grades, attendance, and profile data.
 
 ## Why This Exists
-Browsing the School App web interface manually for updates is slow. If you want to build a custom dashboard, a grade tracker, or a notification bot, you need a reliable way to get that data programmatically. This library takes care of:
+Browsing the SchoolApp web interface manually for updates is slow. If you want to build a custom dashboard, a grade tracker, or a notification bot, you need a reliable way to get that data programmatically. This library takes care of:
 - **Authentication**: Solid session management with automatic CSRF token handling.
 - **Data Cleanup**: Converts messy HTML tables into structured Python objects.
 - **Smart Logic**: Handles nested modules, element-level statistics, and transcript parsing out of the box.

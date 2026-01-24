@@ -1,6 +1,6 @@
-# School App API Documentation
+# SchoolApp API Documentation
 
-This directory contains the full documentation for the School App API library. If you're looking for how a specific part of the system works or what methods are available, you're in the right place.
+This directory contains the full documentation for the SchoolApp API library. If you're looking for how a specific part of the system works or what methods are available, you're in the right place.
 
 ## Where to Start?
 
