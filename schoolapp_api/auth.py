@@ -20,7 +20,7 @@ class AuthManager:
     @staticmethod
     def extract_csrf_token(html_content):
         """Extract CSRF token from HTML content"""
-        match = re.search(r'name="_csrf"\s+value="([^"]+)"', html_content)
+        match = re.search(r'name=["\']_csrf["\']\s+value=["\']([^"\']+)["\']', html_content)
         return match.group(1) if match else None
     
     def update_csrf_token(self, html_content):
@@ -69,6 +69,20 @@ class AuthManager:
         """Check if currently logged in"""
         return self.logged_in
     
+    def check_session(self):
+        """
+        Confirm whether the session is still valid.
+        """
+        code, url, content = self.http_client.get(self.login_url)
+
+        # If server redirects us back to login, session is dead
+        if url and "/login" in url:
+            self.logged_in = False
+            return False
+
+        self.logged_in = True
+        return True
+
     def refresh_csrf_from_url(self, url):
         """Fetch a fresh CSRF token from a specific page"""
         try:

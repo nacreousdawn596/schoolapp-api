@@ -11,14 +11,26 @@ from schoolapp_api.constants import DEFAULT_HEADERS
 
 logger = logging.getLogger(__name__)
 
+class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(
+            req.full_url, code, msg, headers, fp
+        )
+
+
 class HTTPClient:
     """Base HTTP client for making authenticated requests"""
     
     def __init__(self, base_url):
         self.base_url = base_url
         self.cookie_jar = http.cookiejar.CookieJar()
-        opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.cookie_jar))
+        opener = urllib.request.build_opener(
+            urllib.request.HTTPCookieProcessor(self.cookie_jar),
+            NoRedirectHandler()
+        )
         urllib.request.install_opener(opener)
+        # opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.cookie_jar))
+        # urllib.request.install_opener(opener)
         self.headers = DEFAULT_HEADERS.copy()
     
     def get(self, url, params=None):
