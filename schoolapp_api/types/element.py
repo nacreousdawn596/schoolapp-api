@@ -10,6 +10,7 @@ class Element(BaseType):
             "NoteCC": getattr(self, "CC", None),
             "NoteEX": getattr(self, "EX", None),
             "NoteTP": getattr(self, "TP", None),
+            "NoteRAT": getattr(self, "RAT", None),
             "MoyElem": getattr(self, "Moy", None)
         }
         
@@ -40,3 +41,7 @@ class Element(BaseType):
     @property
     def moy_stats(self):
         return self._stats.get("MoyElem") or self.fetch_stats("MoyElem")
+    
+    @property
+    def rat_stats(self):
+        return self._stats.get("NoteRAT") or self.fetch_stats("NoteRAT")
