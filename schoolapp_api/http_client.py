@@ -46,15 +46,14 @@ class HTTPClient:
                 return code, response_url, content
 
         except urllib.error.HTTPError as e:
-            # Still get content from error page if possible (some portals return 401 with nice HTML)
             try:
                 content = e.read().decode("utf-8")
             except:
                 content = None
-            logger.error(f"HTTP Error {e.code}: {e.reason}")
+            logger.error(f"HTTP Error {e.code} on {url}: {e.reason}")
             return e.code, e.url, content
         except Exception as e:
-            logger.error(f"GET Error: {e}")
+            logger.error(f"GET Error on {url}: {e}")
             return None, None, None
     
     def post(self, url, data, referer=None):
@@ -77,8 +76,8 @@ class HTTPClient:
                 content = e.read().decode("utf-8")
             except:
                 content = None
-            logger.error(f"HTTP Error {e.code}: {e.reason}")
+            logger.error(f"HTTP Error {e.code} on {url}: {e.reason}")
             return e.code, e.url, content
         except Exception as e:
-            logger.error(f"POST Error: {e}")
+            logger.error(f"POST Error on {url}: {e}")
             return None, None, None

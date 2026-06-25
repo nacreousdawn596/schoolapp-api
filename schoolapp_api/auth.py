@@ -70,19 +70,29 @@ class AuthManager:
         return self.logged_in
     
     def check_session(self):
-        """
-        Confirm whether the session is still valid by visiting the index page.
-        """
-        from schoolapp_api.constants import INDEX_URL
-        code, url, content = self.http_client.get(INDEX_URL)
+        """Confirm whether the session is still valid by visiting the index page"""
+        try:
+            from schoolapp_api.constants import INDEX_URL
+            code, url, content = self.http_client.get(INDEX_URL)
 
-        # If server redirects us to login, session is dead
-        if url and "/login" in url:
+            # If url is None (exception) or it contains "/login", session is dead
+            if not url or "/login" in url.lower():
+                logger.warning(f"Session check: Redirected to {url or 'None'} - session invalid")
+                self.logged_in = False
+                return False
+            
+            # If content is very short or contains login-like keywords, it's also dead
+            if content and (len(content) < 1000 or "login" in content.lower()[:500]):
+                logger.warning("Session check: Content looks like a login page - session invalid")
+                self.logged_in = False
+                return False
+
+            self.logged_in = True
+            return True
+        except Exception as e:
+            logger.error(f"Error during check_session: {e}")
             self.logged_in = False
             return False
-
-        self.logged_in = True
-        return True
 
     def refresh_csrf_from_url(self, url):
         """Fetch a fresh CSRF token from a specific page"""

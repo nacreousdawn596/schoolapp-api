@@ -162,4 +162,6 @@ main.py
 Thumbs.db
 desktop.ini
 
+./example_usage.py
+/example_usage.py
 example_usage.py
