@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "schoolapp-api"
-version = "2.1.6s"
+version = "2.1.6"
 description = "Professional client for interacting with the School App API"
 readme = "README.md"
 requires-python = ">=3.7"
