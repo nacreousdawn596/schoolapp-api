@@ -71,11 +71,12 @@ class AuthManager:
     
     def check_session(self):
         """
-        Confirm whether the session is still valid.
+        Confirm whether the session is still valid by visiting the index page.
         """
-        code, url, content = self.http_client.get(self.login_url)
+        from schoolapp_api.constants import INDEX_URL
+        code, url, content = self.http_client.get(INDEX_URL)
 
-        # If server redirects us back to login, session is dead
+        # If server redirects us to login, session is dead
         if url and "/login" in url:
             self.logged_in = False
             return False

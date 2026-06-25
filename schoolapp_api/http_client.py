@@ -24,13 +24,9 @@ class HTTPClient:
     def __init__(self, base_url):
         self.base_url = base_url
         self.cookie_jar = http.cookiejar.CookieJar()
-        opener = urllib.request.build_opener(
-            urllib.request.HTTPCookieProcessor(self.cookie_jar),
-            NoRedirectHandler()
+        self.opener = urllib.request.build_opener(
+            urllib.request.HTTPCookieProcessor(self.cookie_jar)
         )
-        urllib.request.install_opener(opener)
-        # opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.cookie_jar))
-        # urllib.request.install_opener(opener)
         self.headers = DEFAULT_HEADERS.copy()
     
     def get(self, url, params=None):
@@ -43,15 +39,20 @@ class HTTPClient:
 
             req = urllib.request.Request(url, headers=self.headers, method="GET")
 
-            with urllib.request.urlopen(req) as response:
+            with self.opener.open(req, timeout=15) as response:
                 code = response.getcode()
                 response_url = response.geturl()
                 content = response.read().decode("utf-8")
                 return code, response_url, content
 
         except urllib.error.HTTPError as e:
+            # Still get content from error page if possible (some portals return 401 with nice HTML)
+            try:
+                content = e.read().decode("utf-8")
+            except:
+                content = None
             logger.error(f"HTTP Error {e.code}: {e.reason}")
-            return e.code, None, None
+            return e.code, e.url, content
         except Exception as e:
             logger.error(f"GET Error: {e}")
             return None, None, None
@@ -66,14 +67,18 @@ class HTTPClient:
             if referer:
                 req.add_header('Referer', referer)
             
-            with urllib.request.urlopen(req) as response:
+            with self.opener.open(req, timeout=15) as response:
                 code = response.getcode()
                 response_url = response.geturl()
                 content = response.read().decode('utf-8')
                 return code, response_url, content
         except urllib.error.HTTPError as e:
+            try:
+                content = e.read().decode("utf-8")
+            except:
+                content = None
             logger.error(f"HTTP Error {e.code}: {e.reason}")
-            return e.code, None, None
+            return e.code, e.url, content
         except Exception as e:
             logger.error(f"POST Error: {e}")
             return None, None, None
